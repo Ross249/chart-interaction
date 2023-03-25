@@ -1,4 +1,3 @@
-import { producer } from "@/lib/dataProducer";
 import { IState } from "@/types/data";
 import React, { useState, useRef, useEffect, CSSProperties } from "react";
 import { Position, Rnd } from "react-rnd";
@@ -117,12 +116,8 @@ export default function RectangleDrawing() {
     initRect.current = false;
   };
 
-  useEffect(() => {
-    console.log(producer(2, 10, 10, 10000));
-  }, []);
-
   return (
-    <div className="relative h-full">
+    <div className="absolute h-full z-100">
       {initRect.current && second.x !== 0 && (
         <Rnd
           className="flex rounded-lg border  items-center justify-center bg-black/10 border-dashed border-black z-10"
@@ -130,6 +125,7 @@ export default function RectangleDrawing() {
             display: "flex",
             top: state.position.y,
             left: state.position.x,
+            zIndex: 2,
           }}
           size={state.size}
           onMouseDown={handleMouseDown}
