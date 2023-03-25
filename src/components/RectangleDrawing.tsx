@@ -1,10 +1,7 @@
+import { producer } from "@/lib/dataProducer";
+import { IState } from "@/types/data";
 import React, { useState, useRef, useEffect, CSSProperties } from "react";
 import { Position, Rnd } from "react-rnd";
-
-interface IState {
-  position: { x: number; y: number };
-  size: { width: number | string; height: number | string };
-}
 
 export default function RectangleDrawing() {
   const [state, setState] = useState<IState>({
@@ -113,12 +110,16 @@ export default function RectangleDrawing() {
     });
   }, [second]);
 
-  const handleContextMenu = (e) => {
+  const handleContextMenu = (e: any) => {
     e.preventDefault();
     setFirst({ x: 0, y: 0 });
     setSecond({ x: 0, y: 0 });
     initRect.current = false;
   };
+
+  useEffect(() => {
+    console.log(producer(2, 10, 10, 10000));
+  }, []);
 
   return (
     <div className="relative h-full">
@@ -139,7 +140,7 @@ export default function RectangleDrawing() {
             console.log(d);
             console.log(state.position);
           }}
-          onContextMenu={(e) => handleContextMenu(e)}
+          onContextMenu={(e: any) => handleContextMenu(e)}
         ></Rnd>
       )}
     </div>
