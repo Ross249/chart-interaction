@@ -4,12 +4,12 @@ import { ScaleLinear } from "d3";
 type AxisLeftProps = {
   yScale: ScaleLinear<number, number>;
   pixelsPerTick: number;
+  width: number;
 };
 
-// tick length
-const TICK_LENGTH = 6;
+const TICK_LENGTH = 10;
 
-export const AxisLeft = ({ yScale, pixelsPerTick }: AxisLeftProps) => {
+export const AxisLeft = ({ yScale, pixelsPerTick, width }: AxisLeftProps) => {
   const range = yScale.range();
 
   const ticks = useMemo(() => {
@@ -24,23 +24,26 @@ export const AxisLeft = ({ yScale, pixelsPerTick }: AxisLeftProps) => {
 
   return (
     <>
-      {/* Main vertical line */}
-      <path
-        d={["M", 0, range[0], "L", 0, range[1]].join(" ")}
-        fill="none"
-        stroke="currentColor"
-      />
-
       {/* Ticks and labels */}
       {ticks.map(({ value, yOffset }) => (
-        <g key={value} transform={`translate(0, ${yOffset})`}>
-          <line x2={-TICK_LENGTH} stroke="currentColor" />
+        <g
+          key={value}
+          transform={`translate(0, ${yOffset})`}
+          shapeRendering={"crispEdges"}
+        >
+          <line
+            x1={-TICK_LENGTH}
+            x2={width + TICK_LENGTH}
+            stroke="#D2D7D3"
+            strokeWidth={0.5}
+          />
           <text
             key={value}
             style={{
               fontSize: "10px",
               textAnchor: "middle",
               transform: "translateX(-20px)",
+              fill: "#D2D7D3",
             }}
           >
             {value}
@@ -50,3 +53,9 @@ export const AxisLeft = ({ yScale, pixelsPerTick }: AxisLeftProps) => {
     </>
   );
 };
+
+{
+  /* <g transform={`translate(0, ${ticks[ticks.length - 1].yOffset - 15})`}>
+        <text style={{ transform: "translateX(-30px)" }}>y axis</text>
+      </g> */
+}

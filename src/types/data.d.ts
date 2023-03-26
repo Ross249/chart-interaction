@@ -2,7 +2,9 @@ export type Data = {
   id: number;
   name: string;
   children?: Data[];
-  value?: number;
+  belong_group_id?: number;
+  valueX?: number;
+  valueY?: number;
 };
 
 export type IState = {
