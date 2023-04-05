@@ -5,6 +5,7 @@ import { AxisLeft } from "./AxisLeft";
 import { AxisBottom } from "./AxisBottom";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "@/lib/consts";
 import { InteractionData, Tooltip } from "./Tooltip";
+import styles from "../../styles/scatterplot.module.css";
 
 type ScatterplotProps = {
   width: number;
@@ -22,6 +23,8 @@ const Scatterplot = ({ width, height, data }: ScatterplotProps) => {
 
   const [hovered, setHovered] = useState<InteractionData | null>(null);
 
+  const [hoveredGroup, setHoveredGroup] = useState<string | null>(null);
+
   // Scales 1, 13, 10, 10000
   const yScale = d3
     .scaleLinear()
@@ -32,7 +35,8 @@ const Scatterplot = ({ width, height, data }: ScatterplotProps) => {
     .domain([MIN_X, MAX_X])
     .range([0, boundsWidth]);
 
-  const frame = data.flatMap((ca, i) => ca.children);
+  const frame = data.flatMap((ca, i) => ca.children) as Data[];
+  console.log(frame);
 
   const allGroups = data.map((d) => String(d.id));
   console.log(allGroups);
@@ -44,12 +48,19 @@ const Scatterplot = ({ width, height, data }: ScatterplotProps) => {
 
   // Build the shapes
   const allShapes = frame.map((ca, i) => {
+    console.log(hoveredGroup);
+
+    const className =
+      hoveredGroup && String(ca?.belong_group_id) !== hoveredGroup
+        ? styles.scatterplotCircle + " " + styles.dimmed
+        : styles.scatterplotCircle;
     return (
       <circle
         key={ca?.id}
         r={8}
-        cx={xScale(ca.valueX)}
-        cy={yScale(ca.valueY)}
+        cx={xScale(!!ca.valueX ? ca.valueX : 0)}
+        cy={yScale(!!ca.valueY ? ca.valueY : 0)}
+        className={className}
         stroke={colorScale(String(ca?.belong_group_id))}
         fill={colorScale(String(ca?.belong_group_id))}
         fillOpacity={0.7}
@@ -60,7 +71,11 @@ const Scatterplot = ({ width, height, data }: ScatterplotProps) => {
             name: ca?.name,
           })
         }
-        onMouseLeave={() => setHovered(null)}
+        onMouseOver={() => setHoveredGroup(String(ca?.belong_group_id))}
+        onMouseLeave={() => {
+          setHovered(null);
+          setHoveredGroup(null);
+        }}
       />
     );
   });
