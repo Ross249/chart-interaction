@@ -16,3 +16,9 @@ export type Node = Data & {
   _x: number;
   _y: number;
 };
+
+export type GraphProps = {
+  width: number;
+  height: number;
+  data: Data[];
+};

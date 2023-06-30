@@ -1,21 +1,16 @@
+"use client";
 import React, { useState } from "react";
 import * as d3 from "d3";
-import { Data } from "@/types/data";
+import { Data, GraphProps } from "@/types/data";
 import { AxisLeft } from "./AxisLeft";
 import { AxisBottom } from "./AxisBottom";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "@/lib/consts";
 import { InteractionData, Tooltip } from "./Tooltip";
 import styles from "../../styles/scatterplot.module.css";
 
-type ScatterplotProps = {
-  width: number;
-  height: number;
-  data: Data[];
-};
-
 const MARGIN = { top: 30, right: 50, bottom: 50, left: 50 };
 
-const Scatterplot = ({ width, height, data }: ScatterplotProps) => {
+const Scatterplot = ({ width, height, data }: GraphProps) => {
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;

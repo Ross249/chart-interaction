@@ -1,5 +1,11 @@
 import { IState } from "@/types/data";
-import React, { useState, useRef, useEffect, CSSProperties } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  CSSProperties,
+  useCallback,
+} from "react";
 import { Position, Rnd } from "react-rnd";
 
 export default function RectangleDrawing() {
@@ -71,11 +77,14 @@ export default function RectangleDrawing() {
       initDrag.current = true;
     }
   };
-  const initMove = (event: MouseEvent) => {
-    if (!initRect.current && first.x !== 0) {
-      setSecond({ x: event.clientX, y: event.clientY });
-    }
-  };
+  const initMove = useCallback(
+    (event: MouseEvent) => {
+      if (!initRect.current && first.x !== 0) {
+        setSecond({ x: event.clientX, y: event.clientY });
+      }
+    },
+    [first]
+  );
   const initUp = (event: MouseEvent) => {
     if (!initRect.current && event.button !== 2) {
       setSecond({ x: event.clientX, y: event.clientY });
@@ -94,7 +103,7 @@ export default function RectangleDrawing() {
       window.removeEventListener("mousemove", initMove);
       window.removeEventListener("mouseup", initUp);
     };
-  }, []);
+  }, [initMove]);
 
   useEffect(() => {
     setState({
@@ -107,7 +116,7 @@ export default function RectangleDrawing() {
         height: Math.max(first.y, second.y) - Math.min(first.y, second.y),
       },
     });
-  }, [second]);
+  }, [second, first]);
 
   const handleContextMenu = (e: any) => {
     e.preventDefault();
